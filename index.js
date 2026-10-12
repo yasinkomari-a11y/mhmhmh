@@ -14,7 +14,7 @@ const botArgs = {
   host: 'rebizibelkacemxxx-xZ.aternos.me',
   port: 22201,
   username: '247_Bot',
-  version: false, // تعطيل الفحص الداخلي للمكتبة
+  version: false, // تعطيل الفحص الداخلي للمكتبة لمنع انهيار البوت
   fakeHost: 'rebizibelkacemxxx-xZ.aternos.me'
 };
 
@@ -43,5 +43,6 @@ function createBot() {
 }
 
 createBot();
+
 
 
