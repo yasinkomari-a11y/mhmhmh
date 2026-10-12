@@ -9,13 +9,13 @@ app.listen(3000, () => {
   console.log('سيرفر الويب جاهز على المنفذ 3000');
 });
 
-// الكود الذكي لتخطي فحص البروتوكول عبر محاكاة الاتصال المباشر
+// إعداد الاتصال الذكي المباشر دون فحص بيانات الإصدار
 const botArgs = {
   host: 'rebizibelkacemxxx-xZ.aternos.me',
   port: 22201,
   username: '247_Bot',
-  version: false,          // إيقاف تحديد الإصدار تماماً لمنع الطرد
-  checkTimeoutInterval: 60000
+  version: false, // تعطيل الفحص الداخلي للمكتبة
+  fakeHost: 'rebizibelkacemxxx-xZ.aternos.me'
 };
 
 let bot;
@@ -23,11 +23,12 @@ let bot;
 function createBot() {
   bot = mineflayer.createBot(botArgs);
 
-  // إجبار البوت على تخطي مرحلة الفحص المزعجة والبدء فوراً
-  bot._client.on('packet', (data, meta) => {
-    if (meta.name === 'disconnect') {
-      console.log('السيرفر أرسل إشارة فصل، جاري إعادة المحاولة...');
+  // إجبار البروتوكول على تخطي أخطاء الهيكلة والبيانات المفقودة
+  bot.on('error', (err) => {
+    if (err.message.includes('data') || err.message.includes('version')) {
+      return; // تجاهل أخطاء إصدار 26.3 تماماً والاستمرار في الاتصال
     }
+    console.log('حدث خطأ في البوت:', err);
   });
 
   bot.on('spawn', () => {
@@ -39,15 +40,8 @@ function createBot() {
     console.log('تم قطع الاتصال، جاري إعادة المحاولة خلال 10 ثوانٍ...');
     setTimeout(createBot, 10000);
   });
-
-  bot.on('error', (err) => {
-    // تجاهل أخطاء الإصدار والبروتوكول والاستمرار في محاولة الدخول
-    if (err.message.includes('version') || err.message.includes('protocol')) {
-      return; 
-    }
-    console.log('حدث خطأ في البوت:', err);
-  });
 }
 
 createBot();
+
 
